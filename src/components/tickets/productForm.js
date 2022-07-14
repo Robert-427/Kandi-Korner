@@ -1,44 +1,37 @@
-import { useState } from "react"
+// import { type } from "@testing-library/user-event/dist/type"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 export const ProductForm = () => {
-    /*
-        TODO: Add the correct default properties to the
-        initial state object
-    */
+    const [types, setTypes] = useState([])
+    const navigate = useNavigate()
+
     const [product, update] = useState({
         name: "",
         typeId: "",
         price: ""
     })
-    /*
-        TODO: Use the useNavigation() hook so you can redirect
-        the user to the ticket list
-    */
-    const navigate = useNavigate()
 
-    const localKandyUser = localStorage.getItem("kandy_user")
-    const kandyUserObject = JSON.parse(localKandyUser)
+    useEffect(
+        () => {
+            fetch(`http://localhost:8088/types`)
+                .then(response => response.json())
+                .then((typeArray) => {
+                    setTypes(typeArray)
+                })
+        },
+        []
+    )
 
     const handleSaveButtonClick = (event) => {
         event.preventDefault()
 
-        // TODO: Create the object to be saved to the API
-        /*
-        {
-            "userId": 1,
-            "name": "Gummy Worms",
-            "typeId": 3,
-            "price": 1.5
-        }
-        */
         const productToSendToAPI = {
             name: product.name,
             typeId: product.typeId,
             price: product.price
         }
 
-        // TODO: Perform the fetch() to POST the object to the API
         return fetch(`http://localhost:8088/products`, {
             method: "POST",
             headers: {
@@ -59,14 +52,13 @@ export const ProductForm = () => {
                 <div className="form-group">
                     <label htmlFor="name">Name of new candy:</label>
                     <input
-                        required autoFocus
                         type="text"
                         className="form-control"
                         placeholder="Candy name here"
                         value={product.name}
                         onChange={
                             (evt) => {
-                                const copy = {...product}
+                                const copy = { ...product }
                                 copy.name = evt.target.value
                                 update(copy)
                             }
@@ -76,38 +68,44 @@ export const ProductForm = () => {
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="typeId">Type of candy:</label>
-                    <input
-                        required autoFocus
-                        input type="radio"
-                        value={product.type}
-                        onChange={
-                            (evt) => {
-                                const copy = {...product}
-                                copy.type = evt.target.value
-                                update(copy)
-                            }
-                        } />
+                    {types.map(
+                        (type) => {
+                            return (
+                                <div className="column" key={type.id}>
+
+                                    <input type="radio" className="product_type" name="product_type" value={type.id}
+                                        onChange={
+                                            (evt) => {
+                                                const copy = { ...product }
+                                                copy.typeId = parseInt(evt.target.value)
+                                                update(copy)
+                                            }
+                                        } />
+                                    <label>{type.candy}</label>
+                                </div>)
+                        }
+                    )
+                    }
                 </div>
             </fieldset>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="price">Price of candy:</label>
                     <input
-                        required autoFocus
-                        type="text"
+                        type="number"
                         className="form-control"
                         placeholder="Candy price here"
                         value={product.price}
                         onChange={
                             (evt) => {
-                                const copy = {...product}
-                                copy.name = evt.target.value
+                                const copy = { ...product }
+                                copy.price = parseFloat(evt.target.value)
                                 update(copy)
                             }
                         } />
                 </div>
             </fieldset>
-            <button 
+            <button
                 onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
                 className="btn btn-primary">
                 Submit Product
@@ -115,20 +113,3 @@ export const ProductForm = () => {
         </form>
     )
 }
-
-/*
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="name">Emergency:</label>
-                    <input type="checkbox"
-                        value={ticket.emergency}
-                        onChange={
-                            (evt) => {
-                                const copy = {...ticket}
-                                copy.emergency = evt.target.checked
-                                update(copy)
-                            }
-                        } />
-                </div>
-            </fieldset>
-*/

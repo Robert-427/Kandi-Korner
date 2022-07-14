@@ -53,6 +53,7 @@ export const ProductsList = () => {
                 ? <>
                     <button onClick={() => { setExpensive(true) }}>Top Priced</button>
                     <button onClick={() => { setExpensive(false) }}>Show All</button>
+                    <button onClick={() => navigate("/product/create")}>Add Product</button>
                 </>
                 : ""
         }
