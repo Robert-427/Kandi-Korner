@@ -72,7 +72,6 @@ export const ProductForm = () => {
                         (type) => {
                             return (
                                 <div className="column" key={type.id}>
-
                                     <input type="radio" className="product_type" name="product_type" value={type.id}
                                         onChange={
                                             (evt) => {
