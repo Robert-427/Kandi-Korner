@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import "./location.css"
+import "./Location.css"
 
 export const LocationList = () => {
     const [locations, setLocations] = useState([])

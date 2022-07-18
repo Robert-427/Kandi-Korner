@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import "./product.css"
+import "./Product.css"
 
-export const ProductsList = () => {
+export const ProductsList = ({searchTermState}) => {
     const [products, setProducts] = useState([])
     const [filteredProducts, setFilteredProducts] = useState([])
     const [expensive, setExpensive] = useState(false)
@@ -10,6 +10,16 @@ export const ProductsList = () => {
 
     const localKandyUser = localStorage.getItem("kandy_user")
     const kandyUserObject = JSON.parse(localKandyUser)
+
+    useEffect(
+        () => {
+            const searchedProducts = products.filter(product => {
+                return product.name.toLowerCase().startsWith(searchTermState.toLowerCase())
+            })
+            setFilteredProducts(searchedProducts)
+        },
+        [ searchTermState ]
+    )
 
     useEffect(
         () => {
@@ -66,7 +76,14 @@ export const ProductsList = () => {
                         return <section className="product" key={`product--${product.id}`}>
                             <header>Candy: {product.name}</header>
                             <footer>Price per Unit: ${Number(product.price).toFixed(2)}</footer>
-                            <footer>Product Type: {product.type.candy}</footer>
+                            {
+                                kandyUserObject.staff
+                                ? <>
+                                    <footer>Product Type: {product.type.candy}</footer>
+                                </>
+                                : ""
+                            }
+                            
                         </section>
                     }
                 )

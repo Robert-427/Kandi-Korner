@@ -1,22 +1,15 @@
-import { Outlet, Route, Routes } from "react-router-dom"
-import { LocationList } from "../tickets/locationList"
-import { ProductsList } from "../tickets/productList"
-import { ProductForm } from "../tickets/productForm"
-import { StorePic } from "../images/imageForms"
+import { EmployeeViews } from "./EmployeeViews"
+import { CustomerViews } from "./CustomerViews"
 
 export const ApplicationViews = () => {
-	return (
-		<Routes>
-			<Route path="/" element={
-				<>
-					<h1 className="header">Kandy Korner Shop</h1>
-					<Outlet />
-				</>
-			}>
-				<Route path="locations" element={<LocationList />} />
-				<Route path="products" element={<ProductsList />} />
-				<Route path="product/create" element={<ProductForm />} />
-			</Route>
-		</Routes>
-	)
+
+    const localHoneyUser = localStorage.getItem("kandy_user")
+    const honeyUserObject = JSON.parse(localHoneyUser)
+
+    if (honeyUserObject.staff) {
+        return <EmployeeViews />
+    } else {
+        return <CustomerViews />
+    }
 }
+
