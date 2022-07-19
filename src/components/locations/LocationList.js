@@ -6,9 +6,6 @@ export const LocationList = () => {
     const [locations, setLocations] = useState([])
     const navigate = useNavigate()
 
-    const localKandyUser = localStorage.getItem("kandy_user")
-    const kandyUserObject = JSON.parse(localKandyUser)
-
     useEffect(
         () => {
             fetch(`http://localhost:8088/locations`)
@@ -17,7 +14,7 @@ export const LocationList = () => {
                     setLocations(locationArray)
                 })
         },
-        [] // When this array is empty, you are observing initial component state
+        []
     )
     return <>
         <h2>List of Locations</h2>
